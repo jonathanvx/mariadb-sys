@@ -1,5 +1,15 @@
 # Change history for the MySQL sys schema
 
+## 1.5.2 (26/06/19)
+
+### Improvements
+
+* Is working with MariaDB 10.0 to 10.4 now. We abandoned @server_uuid, @@master_info_repository and @@relay_log_info_repository to achieve this.
+
+### Bug Fixes
+
+* None so far
+
 ## 1.5.1 (07/07/16)
 
 ### Improvements
