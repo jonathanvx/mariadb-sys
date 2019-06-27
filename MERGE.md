@@ -1,6 +1,6 @@
 # Merging from MySQL sys schema
 
-MariaDB up to 10.4 contains a MySQL 5.6 PERFORMANCE_SCHEMA (P_S):
+MariaDB up to 10.4 contains a MySQL 5.6 `PERFORMANCE_SCHEMA` (P_S):
 
     SQL> SELECT @@version, plugin_name, plugin_auth_version
       FROM information_schema.plugins
@@ -20,6 +20,21 @@ MySQL 5.7 and newer is available in the MySQL downloads under `share/mysql_sys_s
 
 * Merge changes from other sources, see below.
 * Backport as much as possible from MySQL 5.7 and MySQL 8.0 sys schema to MariaDB sys schema.
+
+The `sys` schema version can be found as follows:
+
+    SQL> SELECT * FROM sys.version;
+    +-------------+---------------+
+    | sys_version | mysql_version |
+    +-------------+---------------+
+    | 1.5.1       | 5.7.25-log    |
+    +-------------+---------------+
+
+In MySQL 5.7 an inline file is shipped. To generate a similar file you can run:
+
+    ./mariadb-sys/generate_sql_file.sh -v 57 -u "'mysql.sys'@'localhost'"
+
+And then do a diff between `mysql-5.7/share/mysql_sys_schema.sql` and `mariadb-sys/gen/sys_1.5.2_57_inline.sql` But they are completely differently formated... So we need an other approach.
 
 ## Sources found in the Internet
 

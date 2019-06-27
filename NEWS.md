@@ -4,7 +4,7 @@
 
 ### Improvements
 
-* Is working with MariaDB 10.0 to 10.4 now. We abandoned @server_uuid, @@master_info_repository and @@relay_log_info_repository to achieve this.
+* Is working with MariaDB 10.0 to 10.4 now. We abandoned `@server_uuid`, `@@master_info_repository` and `@@relay_log_info_repository` to achieve this.
 
 ### Bug Fixes
 
