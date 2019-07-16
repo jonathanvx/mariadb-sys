@@ -18,8 +18,8 @@ MySQL 5.7 and newer is available in the MySQL downloads under `share/mysql_sys_s
 
 ## Further tasks
 
-* Merge changes from other sources, see below.
 * Backport as much as possible from MySQL 5.7 and MySQL 8.0 sys schema to MariaDB sys schema.
+* Merge changes from other sources, see below.
 
 The `sys` schema version can be found as follows:
 
@@ -30,11 +30,12 @@ The `sys` schema version can be found as follows:
     | 1.5.1       | 5.7.25-log    |
     +-------------+---------------+
 
-In MySQL 5.7 an inline file is shipped. To generate a similar file you can run:
+In MySQL 5.7 an inline file is shipped. To generate the same file you can run:
 
-    ./mariadb-sys/generate_sql_file.sh -v 57 -u "'mysql.sys'@'localhost'"
+    ./generate_sql_file.sh -v 57 -m
+    diff gen/mysql_sys_schema.sql /home/mysql/product/mysql-5.7/share/mysql_sys_schema.sql 
 
-And then do a diff between `mysql-5.7/share/mysql_sys_schema.sql` and `mariadb-sys/gen/sys_1.5.2_57_inline.sql` But they are completely differently formated... So we need an other approach.
+It looks like our current mysql_sys_schema.sql is the same as original MySQL 5.7.26. So nothing has changed since then.
 
 ## Sources found in the Internet
 

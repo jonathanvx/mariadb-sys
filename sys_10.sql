@@ -18,7 +18,7 @@ SOURCE ./before_setup.sql
 SOURCE ./views/version.sql
 
 SOURCE ./tables/sys_config.sql
-SOURCE ./tables/sys_config_data.sql
+SOURCE ./tables/sys_config_data_10.sql   -- ported
 
 SOURCE ./triggers/sys_config_insert_set_user.sql
 SOURCE ./triggers/sys_config_update_set_user.sql
@@ -26,12 +26,12 @@ SOURCE ./triggers/sys_config_update_set_user.sql
 SOURCE ./functions/extract_schema_from_file_name.sql
 SOURCE ./functions/extract_table_from_file_name.sql
 SOURCE ./functions/format_bytes.sql
-SOURCE ./functions/format_path.sql
+SOURCE ./functions/format_path.sql   -- not possible to port b/c P_S is too old
 SOURCE ./functions/format_statement.sql
 SOURCE ./functions/format_time.sql
 SOURCE ./functions/list_add.sql
 SOURCE ./functions/list_drop.sql
-SOURCE ./functions/ps_is_account_enabled.sql
+SOURCE ./functions/ps_is_account_enabled.sql   -- not possible to port b/c P_S is too old
 SOURCE ./functions/ps_is_consumer_enabled.sql
 SOURCE ./functions/ps_is_instrument_default_enabled.sql
 SOURCE ./functions/ps_is_instrument_default_timed.sql
@@ -39,6 +39,7 @@ SOURCE ./functions/ps_is_thread_instrumented.sql
 SOURCE ./functions/ps_thread_id.sql
 SOURCE ./functions/ps_thread_account.sql
 SOURCE ./functions/ps_thread_stack.sql
+-- SOURCE ./functions/ps_thread_trx_info.sql   -- to port! Error which I do not understand
 SOURCE ./functions/quote_identifier.sql
 SOURCE ./functions/sys_get_config.sql
 SOURCE ./functions/version_major.sql
@@ -56,12 +57,12 @@ SOURCE ./views/i_s/schema_auto_increment_columns.sql
 SOURCE ./views/i_s/x_schema_flattened_keys.sql
 SOURCE ./views/i_s/schema_redundant_indexes.sql
 
-SOURCE ./views/p_s/ps_check_lost_instrumentation.sql
-SOURCE ./views/p_s/processlist.sql
-SOURCE ./views/p_s/x_processlist.sql
+SOURCE ./views/p_s/ps_check_lost_instrumentation.sql   -- not possible to port b/c P_S is too old
+SOURCE ./views/p_s/processlist.sql   -- See also further down!
+SOURCE ./views/p_s/x_processlist.sql   -- See also further down!
 
-SOURCE ./views/p_s/sessions.sql
-SOURCE ./views/p_s/x_sessions.sql
+SOURCE ./views/p_s/sessions.sql   -- See also further down!
+SOURCE ./views/p_s/x_sessions.sql   -- See also further down!
 
 SOURCE ./views/p_s/latest_file_io.sql
 SOURCE ./views/p_s/x_latest_file_io.sql
@@ -76,6 +77,17 @@ SOURCE ./views/p_s/x_io_global_by_wait_by_bytes.sql
 SOURCE ./views/p_s/io_global_by_wait_by_latency.sql
 SOURCE ./views/p_s/x_io_global_by_wait_by_latency.sql
 
+-- SOURCE ./views/p_s/memory_by_user_by_current_bytes.sql   -- not possible to port b/c P_S is too old
+-- SOURCE ./views/p_s/x_memory_by_user_by_current_bytes.sql   -- not possible to port b/c P_S is too old
+-- SOURCE ./views/p_s/memory_by_host_by_current_bytes.sql   -- not possible to port b/c P_S is too old
+-- SOURCE ./views/p_s/x_memory_by_host_by_current_bytes.sql   -- not possible to port b/c P_S is too old
+-- SOURCE ./views/p_s/memory_by_thread_by_current_bytes.sql   -- not possible to port b/c P_S is too old
+-- SOURCE ./views/p_s/x_memory_by_thread_by_current_bytes.sql   -- not possible to port b/c P_S is too old
+-- SOURCE ./views/p_s/memory_global_by_current_bytes.sql   -- not possible to port b/c P_S is too old
+-- SOURCE ./views/p_s/x_memory_global_by_current_bytes.sql   -- not possible to port b/c P_S is too old
+-- SOURCE ./views/p_s/memory_global_total.sql   -- not possible to port b/c P_S is too old
+-- SOURCE ./views/p_s/x_memory_global_total.sql   -- not possible to port b/c P_S is too old
+
 SOURCE ./views/p_s/schema_index_statistics.sql
 SOURCE ./views/p_s/x_schema_index_statistics.sql
 SOURCE ./views/p_s/x_ps_schema_table_statistics_io.sql
@@ -86,6 +98,8 @@ SOURCE ./views/p_s/x_schema_table_statistics_with_buffer.sql
 SOURCE ./views/p_s/schema_tables_with_full_table_scans.sql
 SOURCE ./views/p_s/x_schema_tables_with_full_table_scans.sql
 SOURCE ./views/p_s/schema_unused_indexes.sql
+-- SOURCE ./views/p_s/schema_table_lock_waits.sql   -- not possible to port b/c P_S is too old
+-- SOURCE ./views/p_s/x_schema_table_lock_waits.sql   -- not possible to port b/c P_S is too old
 
 SOURCE ./views/p_s/statement_analysis.sql
 SOURCE ./views/p_s/x_statement_analysis.sql
@@ -112,8 +126,8 @@ SOURCE ./views/p_s/user_summary_by_statement_latency.sql
 SOURCE ./views/p_s/x_user_summary_by_statement_latency.sql
 SOURCE ./views/p_s/user_summary_by_stages.sql
 SOURCE ./views/p_s/x_user_summary_by_stages.sql
-SOURCE ./views/p_s/user_summary.sql
-SOURCE ./views/p_s/x_user_summary.sql
+SOURCE ./views/p_s/user_summary.sql   -- to port! Error which I do not understand
+SOURCE ./views/p_s/x_user_summary.sql   -- to port! Error which I do not understand
 
 SOURCE ./views/p_s/host_summary_by_file_io_type.sql
 SOURCE ./views/p_s/x_host_summary_by_file_io_type.sql
@@ -125,8 +139,8 @@ SOURCE ./views/p_s/host_summary_by_statement_latency.sql
 SOURCE ./views/p_s/x_host_summary_by_statement_latency.sql
 SOURCE ./views/p_s/host_summary_by_stages.sql
 SOURCE ./views/p_s/x_host_summary_by_stages.sql
-SOURCE ./views/p_s/host_summary.sql
-SOURCE ./views/p_s/x_host_summary.sql
+SOURCE ./views/p_s/host_summary.sql   -- to port! Error which I do not understand
+SOURCE ./views/p_s/x_host_summary.sql   -- to port! Error which I do not understand
 
 SOURCE ./views/p_s/wait_classes_global_by_avg_latency.sql
 SOURCE ./views/p_s/x_wait_classes_global_by_avg_latency.sql
@@ -139,7 +153,14 @@ SOURCE ./views/p_s/x_waits_by_host_by_latency.sql
 SOURCE ./views/p_s/waits_global_by_latency.sql
 SOURCE ./views/p_s/x_waits_global_by_latency.sql
 
-SOURCE ./views/p_s/metrics_56.sql
+SOURCE ./views/p_s/metrics_56.sql   -- not possible to port b/c P_S is too old
+
+-- SOURCE ./views/p_s/processlist_57.sql   -- to port! See furhter up!
+-- SOURCE ./views/p_s/x_processlist_57.sql   -- to port! See furhter up!
+
+-- SOURCE ./views/p_s/sessions.sql   -- to port! See furhter up!
+-- SOURCE ./views/p_s/x_sessions.sql   -- to port! See furhter up!
+-- SOURCE ./views/p_s/session_ssl_status.sql   -- not possible to port b/c P_S is too old
 
 SOURCE ./procedures/create_synonym_db.sql
 SOURCE ./procedures/execute_prepared_stmt.sql
@@ -148,7 +169,7 @@ SOURCE ./procedures/diagnostics.sql
 
 SOURCE ./procedures/ps_statement_avg_latency_histogram.sql
 SOURCE ./procedures/ps_trace_statement_digest.sql
-SOURCE ./procedures/ps_trace_thread.sql
+SOURCE ./procedures/ps_trace_thread.sql   -- to port!
 
 SOURCE ./procedures/ps_setup_disable_background_threads.sql
 SOURCE ./procedures/ps_setup_disable_consumer.sql
@@ -162,7 +183,7 @@ SOURCE ./procedures/ps_setup_enable_thread.sql
 
 SOURCE ./procedures/ps_setup_reload_saved.sql
 SOURCE ./procedures/ps_setup_reset_to_default_57_before.sql
-SOURCE ./procedures/ps_setup_reset_to_default.sql
+SOURCE ./procedures/ps_setup_reset_to_default.sql   -- differrent, to port!
 SOURCE ./procedures/ps_setup_reset_to_default_57_after.sql
 SOURCE ./procedures/ps_setup_save.sql
 SOURCE ./procedures/ps_setup_show_disabled.sql
