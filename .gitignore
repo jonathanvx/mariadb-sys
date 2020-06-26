@@ -1,3 +1,4 @@
 gen/
 mariadb-sys.kdev4
 kdev4
+.DS_Store
