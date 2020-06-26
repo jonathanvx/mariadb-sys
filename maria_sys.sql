@@ -50,7 +50,7 @@ USE sys;
 -- 
 
 CREATE OR REPLACE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW version (
   sys_version,
@@ -1813,7 +1813,7 @@ DELIMITER ;
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW innodb_buffer_stats_by_schema (
   object_schema,
@@ -1868,7 +1868,7 @@ SELECT IF(LOCATE('.', ibp.table_name) = 0, 'InnoDB System', REPLACE(SUBSTRING_IN
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$innodb_buffer_stats_by_schema (
   object_schema,
@@ -1928,7 +1928,7 @@ SELECT IF(LOCATE('.', ibp.table_name) = 0, 'InnoDB System', REPLACE(SUBSTRING_IN
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW innodb_buffer_stats_by_table (
   object_schema,
@@ -1990,7 +1990,7 @@ SELECT IF(LOCATE('.', ibp.table_name) = 0, 'InnoDB System', REPLACE(SUBSTRING_IN
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$innodb_buffer_stats_by_table (
   object_schema,
@@ -2070,7 +2070,7 @@ SELECT IF(LOCATE('.', ibp.table_name) = 0, 'InnoDB System', REPLACE(SUBSTRING_IN
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW innodb_lock_waits (
   wait_started,
@@ -2188,7 +2188,7 @@ SELECT r.trx_wait_started AS wait_started,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$innodb_lock_waits (
   wait_started,
@@ -2291,7 +2291,7 @@ SELECT r.trx_wait_started AS wait_started,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW schema_object_overview (
   db,
@@ -2328,7 +2328,7 @@ ORDER BY DB, OBJECT_TYPE;
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER
 VIEW schema_auto_increment_columns (
   table_schema,
@@ -2393,7 +2393,7 @@ SELECT TABLE_SCHEMA,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER
 VIEW x$schema_flattened_keys (
   table_schema,
@@ -2451,7 +2451,7 @@ VIEW x$schema_flattened_keys (
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER
 VIEW schema_redundant_indexes (
   table_schema,
@@ -2540,7 +2540,7 @@ VIEW schema_redundant_indexes (
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW ps_check_lost_instrumentation (
   variable_name,
@@ -2599,7 +2599,7 @@ SELECT variable_name, variable_value
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER
 VIEW processlist (
   thd_id,
@@ -2707,7 +2707,7 @@ SELECT pps.thread_id AS thd_id,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER
 VIEW x$processlist (
   thd_id,
@@ -2824,7 +2824,7 @@ SELECT pps.thread_id AS thd_id,
 --
 
 CREATE OR REPLACE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW session
  AS
@@ -2888,7 +2888,7 @@ WHERE conn_id IS NOT NULL AND command != 'Daemon';
 --
 
 CREATE OR REPLACE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$session
  AS
@@ -2928,7 +2928,7 @@ WHERE conn_id IS NOT NULL AND command != 'Daemon';
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW latest_file_io (
   thread,
@@ -2985,7 +2985,7 @@ SELECT IF(id IS NULL,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$latest_file_io (
   thread,
@@ -3048,7 +3048,7 @@ SELECT IF(id IS NULL,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW io_by_thread_by_latency (
   user,
@@ -3118,7 +3118,7 @@ SELECT IF(processlist_id IS NULL,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$io_by_thread_by_latency (
   user,
@@ -3182,7 +3182,7 @@ SELECT IF(processlist_id IS NULL,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW io_global_by_file_by_bytes (
   file,
@@ -3240,7 +3240,7 @@ SELECT sys.format_path(file_name) AS file,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$io_global_by_file_by_bytes (
   file,
@@ -3298,7 +3298,7 @@ SELECT file_name AS file,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW io_global_by_file_by_latency (
   file,
@@ -3356,7 +3356,7 @@ SELECT sys.format_path(file_name) AS file,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$io_global_by_file_by_latency (
   file,
@@ -3425,7 +3425,7 @@ SELECT file_name AS file,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW io_global_by_wait_by_bytes (
   event_name,
@@ -3499,7 +3499,7 @@ SELECT SUBSTRING_INDEX(event_name, '/', -2) event_name,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$io_global_by_wait_by_bytes (
   event_name,
@@ -3578,7 +3578,7 @@ SELECT SUBSTRING_INDEX(event_name, '/', -2) AS event_name,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW io_global_by_wait_by_latency (
   event_name,
@@ -3660,7 +3660,7 @@ SELECT SUBSTRING_INDEX(event_name, '/', -2) AS event_name,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$io_global_by_wait_by_latency (
   event_name,
@@ -3732,7 +3732,7 @@ SELECT SUBSTRING_INDEX(event_name, '/', -2) AS event_name,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW schema_index_statistics (
   table_schema,
@@ -3797,7 +3797,7 @@ SELECT OBJECT_SCHEMA AS table_schema,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$schema_index_statistics (
   table_schema,
@@ -3864,7 +3864,7 @@ SELECT OBJECT_SCHEMA AS table_schema,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$ps_schema_table_statistics_io (
   table_schema,
@@ -3937,7 +3937,7 @@ SELECT extract_schema_from_file_name(file_name) AS table_schema,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW schema_table_statistics (
   table_schema,
@@ -4031,7 +4031,7 @@ SELECT pst.object_schema AS table_schema,
  
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$schema_table_statistics (
   table_schema,
@@ -4132,7 +4132,7 @@ SELECT pst.object_schema AS table_schema,
  
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW schema_table_statistics_with_buffer (
   table_schema,
@@ -4248,7 +4248,7 @@ SELECT pst.object_schema AS table_schema,
  
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$schema_table_statistics_with_buffer (
   table_schema,
@@ -4345,7 +4345,7 @@ SELECT pst.object_schema AS table_schema,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW schema_tables_with_full_table_scans (
   object_schema,
@@ -4396,7 +4396,7 @@ SELECT object_schema,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$schema_tables_with_full_table_scans (
   object_schema,
@@ -4452,7 +4452,7 @@ SELECT object_schema,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW schema_unused_indexes (
   object_schema,
@@ -4519,7 +4519,7 @@ SELECT object_schema,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW statement_analysis (
   query,
@@ -4622,7 +4622,7 @@ ORDER BY SUM_TIMER_WAIT DESC;
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$statement_analysis (
   query,
@@ -4710,7 +4710,7 @@ ORDER BY SUM_TIMER_WAIT DESC;
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW statements_with_errors_or_warnings (
   query,
@@ -4774,7 +4774,7 @@ ORDER BY SUM_ERRORS DESC, SUM_WARNINGS DESC;
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$statements_with_errors_or_warnings (
   query,
@@ -4847,7 +4847,7 @@ ORDER BY SUM_ERRORS DESC, SUM_WARNINGS DESC;
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW statements_with_full_table_scans (
   query,
@@ -4929,7 +4929,7 @@ SELECT sys.format_statement(DIGEST_TEXT) AS query,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$statements_with_full_table_scans (
   query,
@@ -4989,7 +4989,7 @@ SELECT DIGEST_TEXT AS query,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$ps_digest_avg_latency_distribution (
   cnt,
@@ -5030,7 +5030,7 @@ SELECT COUNT(*) cnt,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$ps_digest_95th_percentile_by_avg_us (
   avg_us,
@@ -5079,7 +5079,7 @@ HAVING IFNULL(SUM(s1.cnt)/NULLIF((SELECT COUNT(*) FROM performance_schema.events
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW statements_with_runtimes_in_95th_percentile (
   query,
@@ -5161,7 +5161,7 @@ SELECT sys.format_statement(DIGEST_TEXT) AS query,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$statements_with_runtimes_in_95th_percentile (
   query,
@@ -5241,7 +5241,7 @@ SELECT DIGEST_TEXT AS query,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW statements_with_sorting (
   query,
@@ -5314,7 +5314,7 @@ SELECT sys.format_statement(DIGEST_TEXT) AS query,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$statements_with_sorting (
   query,
@@ -5386,7 +5386,7 @@ SELECT DIGEST_TEXT AS query,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW statements_with_temp_tables (
   query,
@@ -5454,7 +5454,7 @@ ORDER BY SUM_CREATED_TMP_DISK_TABLES DESC, SUM_CREATED_TMP_TABLES DESC;
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$statements_with_temp_tables (
   query,
@@ -5531,7 +5531,7 @@ ORDER BY SUM_CREATED_TMP_DISK_TABLES DESC, SUM_CREATED_TMP_TABLES DESC;
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW user_summary_by_file_io_type (
   user,
@@ -5597,7 +5597,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$user_summary_by_file_io_type (
   user,
@@ -5648,7 +5648,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW user_summary_by_file_io (
   user,
@@ -5695,7 +5695,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$user_summary_by_file_io (
   user,
@@ -5746,7 +5746,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW user_summary_by_statement_type (
   user,
@@ -5810,7 +5810,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$user_summary_by_statement_type (
   user,
@@ -5869,7 +5869,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW user_summary_by_statement_latency (
   user,
@@ -5926,7 +5926,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$user_summary_by_statement_latency (
   user,
@@ -5998,7 +5998,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW user_summary_by_stages (
   user,
@@ -6062,7 +6062,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$user_summary_by_stages (
   user,
@@ -6111,7 +6111,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW user_summary (
   user,
@@ -6171,7 +6171,7 @@ SELECT IF(accounts.user IS NULL, 'background', accounts.user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$user_summary (
   user,
@@ -6247,7 +6247,7 @@ SELECT IF(accounts.user IS NULL, 'background', accounts.user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW host_summary_by_file_io_type (
   host,
@@ -6313,7 +6313,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$host_summary_by_file_io_type (
   host,
@@ -6364,7 +6364,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW host_summary_by_file_io (
   host,
@@ -6411,7 +6411,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$host_summary_by_file_io (
   host,
@@ -6462,7 +6462,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW host_summary_by_statement_type (
   host,
@@ -6526,7 +6526,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$host_summary_by_statement_type (
   host,
@@ -6585,7 +6585,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW host_summary_by_statement_latency (
   host,
@@ -6642,7 +6642,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$host_summary_by_statement_latency (
   host,
@@ -6714,7 +6714,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW host_summary_by_stages (
   host,
@@ -6778,7 +6778,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$host_summary_by_stages (
   host,
@@ -6827,7 +6827,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW host_summary (
   host,
@@ -6887,7 +6887,7 @@ SELECT IF(accounts.host IS NULL, 'background', accounts.host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$host_summary (
   host,
@@ -6950,7 +6950,7 @@ SELECT IF(accounts.host IS NULL, 'background', accounts.host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW wait_classes_global_by_avg_latency (
   event_class,
@@ -7006,7 +7006,7 @@ SELECT SUBSTRING_INDEX(event_name,'/', 3) AS event_class,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$wait_classes_global_by_avg_latency (
   event_class,
@@ -7063,7 +7063,7 @@ SELECT SUBSTRING_INDEX(event_name,'/', 3) AS event_class,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW wait_classes_global_by_latency (
   event_class,
@@ -7119,7 +7119,7 @@ SELECT SUBSTRING_INDEX(event_name,'/', 3) AS event_class,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$wait_classes_global_by_latency (
   event_class,
@@ -7184,7 +7184,7 @@ SELECT SUBSTRING_INDEX(event_name,'/', 3) AS event_class,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW waits_by_user_by_latency (
   user,
@@ -7249,7 +7249,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$waits_by_user_by_latency (
   user,
@@ -7304,7 +7304,7 @@ SELECT IF(user IS NULL, 'background', user) AS user,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW waits_by_host_by_latency (
   host,
@@ -7358,7 +7358,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$waits_by_host_by_latency (
   host,
@@ -7412,7 +7412,7 @@ SELECT IF(host IS NULL, 'background', host) AS host,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW waits_global_by_latency (
   events,
@@ -7464,7 +7464,7 @@ SELECT event_name AS event,
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW x$waits_global_by_latency (
   events,
@@ -7561,7 +7561,7 @@ SELECT event_name AS event,
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+  
   SQL SECURITY INVOKER 
 VIEW metrics (
   Variable_name,

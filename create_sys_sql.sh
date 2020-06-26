@@ -177,6 +177,6 @@ CAT ./procedures/get_optimizer_switches.sql >> tmp_maria_sys.sql
 
 CAT ./after_setup.sql >> tmp_maria_sys.sql
 
-CAT tmp_maria_sys.sql | SED "s/DEFINER=\'root\'@\'localhost\'//g" > maria_sys.sql
+CAT tmp_maria_sys.sql | SED "s/DEFINER=\'root\'@\'localhost\'//g" | SED "s/DEFINER = \'root\'@\'localhost\'//g" > maria_sys.sql
 
 rm -f tmp_maria_sys.sql
