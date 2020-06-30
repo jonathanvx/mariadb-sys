@@ -22,7 +22,7 @@
 -- 
 -- Performs less locking than the legacy sources, whilst giving extra information.
 --
--- mysql> select * from sys.session\G
+-- mysql> select * from sys.sessions\G
 -- *************************** 1. row ***************************
 --                 thd_id: 24
 --                conn_id: 2
@@ -57,7 +57,7 @@
 CREATE OR REPLACE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW session
+VIEW sessions
  AS
 SELECT * FROM sys.processlist
 WHERE conn_id IS NOT NULL AND command != 'Daemon';

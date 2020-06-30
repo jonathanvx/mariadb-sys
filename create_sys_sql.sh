@@ -34,6 +34,7 @@ CAT ./views/schema_tables_with_full_table_scans.sql >> maria_sys.sql
 CAT ./views/schema_unused_indexes.sql >> maria_sys.sql
 
 CAT ./views/statement_analysis.sql >> maria_sys.sql
+CAT ./views/statement_analysis_basic.sql >> maria_sys.sql
 CAT ./views/statements_with_errors_or_warnings.sql >> maria_sys.sql
 CAT ./views/statements_with_full_table_scans.sql >> maria_sys.sql
 CAT ./views/statements_with_runtimes_in_95th_percentile.sql >> maria_sys.sql

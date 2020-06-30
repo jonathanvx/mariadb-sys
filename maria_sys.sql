@@ -236,15 +236,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW innodb_buffer_stats_by_schema (
-  object_schema,
-  allocated,
-  data,
-  pages,
-  pages_hashed,
-  pages_old,
-  rows_cached
-) AS
+VIEW innodb_buffer_stats_by_schema AS
 SELECT IF(LOCATE('.', ibp.table_name) = 0, 'InnoDB System', REPLACE(SUBSTRING_INDEX(ibp.table_name, '.', 1), '`', '')) AS object_schema,
        round(SUM(IF(ibp.compressed_size = 0, 16384, compressed_size))/ 1073741824, 4) AS allocated_Gb,
        round(SUM(ibp.data_size)/ 1073741824, 4) AS data_Gb,
@@ -365,7 +357,7 @@ SELECT IF(LOCATE('.', ibp.table_name) = 0, 'InnoDB System', REPLACE(SUBSTRING_IN
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
-  DEFINER = 'root'@'localhost'
+--  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
 VIEW innodb_lock_waits (
   wait_started,
@@ -736,29 +728,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER
-VIEW processlist (
-  thd_id,
-  conn_id,
-  user,
-  db,
-  command,
-  state,
-  time,
-  current_statement,
-  statement_latency,
-  lock_latency,
-  rows_examined,
-  rows_sent,
-  rows_affected,
-  tmp_tables,
-  tmp_disk_tables,
-  full_scan,
-  last_statement,
-  last_statement_latency,
-  last_wait,
-  last_wait_latency,
-  source
-) AS
+VIEW processlist AS
 SELECT pps.thread_id AS thd_id,
        pps.processlist_id AS conn_id,
        IF(pps.name = 'thread/sql/one_connection',
@@ -767,12 +737,12 @@ SELECT pps.thread_id AS thd_id,
        pps.processlist_db AS db,
        pps.processlist_command AS command,
        pps.processlist_state AS state,
-       pps.processlist_time AS time,
+       pps.processlist_time AS 'time',
        LEFT(REPLACE(pps.processlist_info, '\n', ' '), 100) AS current_statement,
        IF(esc.end_event_id IS NULL,
-          round(esc.timer_wait / 1000000000000, 4),
+          round(esc.timer_wait / 1000000000000, 2),
           NULL) AS statement_latency_sec,
-       round(esc.lock_time / 1000000000000, 4) AS lock_latency_sec,
+       round(esc.lock_time / 1000000000000, 2) AS lock_latency_sec,
        esc.rows_examined AS rows_examined,
        esc.rows_sent AS rows_sent,
        esc.rows_affected AS rows_affected,
@@ -783,12 +753,12 @@ SELECT pps.thread_id AS thd_id,
           LEFT(REPLACE(esc.sql_text, '\n', ' '), 100),
           NULL) AS last_statement,
        IF(esc.end_event_id IS NOT NULL,
-          round(esc.timer_wait / 1000000000000, 4),
+          round(esc.timer_wait / 1000000000000, 2),
           NULL) AS last_statement_latency_sec,
        ewc.event_name AS last_wait,
        IF(ewc.end_event_id IS NULL AND ewc.event_name IS NOT NULL,
           'Still Waiting',
-          round(ewc.timer_wait  / 1000000000000, 4)) last_wait_latency_sec,
+          round(ewc.timer_wait  / 1000000000000, 2)) last_wait_latency_sec,
        ewc.source
   FROM performance_schema.threads AS pps
   LEFT JOIN performance_schema.events_waits_current AS ewc USING (thread_id)
@@ -818,7 +788,7 @@ SELECT pps.thread_id AS thd_id,
 -- 
 -- Performs less locking than the legacy sources, whilst giving extra information.
 --
--- mysql> select * from sys.session\G
+-- mysql> select * from sys.sessions\G
 -- *************************** 1. row ***************************
 --                 thd_id: 24
 --                conn_id: 2
@@ -853,7 +823,7 @@ SELECT pps.thread_id AS thd_id,
 CREATE OR REPLACE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW session
+VIEW sessions
  AS
 SELECT * FROM sys.processlist
 WHERE conn_id IS NOT NULL AND command != 'Daemon';
@@ -894,13 +864,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW latest_file_io (
-  thread,
-  file,
-  latency,
-  operation,
-  requested
-) AS
+VIEW latest_file_io AS
 SELECT IF(id IS NULL, 
              CONCAT(SUBSTRING_INDEX(name, '/', -1), ':', thread_id), 
              CONCAT(user, '@', host, ':', id)
@@ -957,17 +921,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW io_by_thread_by_latency (
-  user,
-  total,
-  total_latency,
-  min_latency,
-  avg_latency,
-  max_latency,
-  thread_id,
-  processlist_id
-)
-AS
+VIEW io_by_thread_by_latency AS
 SELECT IF(processlist_id IS NULL, 
              SUBSTRING_INDEX(name, '/', -1), 
              CONCAT(processlist_user, '@', processlist_host)
@@ -1021,17 +975,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW io_global_by_file_by_bytes (
-  file,
-  count_read,
-  total_read,
-  avg_read,
-  count_write,
-  total_written,
-  avg_write,
-  total,
-  write_pct
-) AS
+VIEW io_global_by_file_by_bytes AS
 SELECT file_name AS file, 
        count_read, 
        round(sum_number_of_bytes_read / 1073741824, 4) AS total_read_Gb,
@@ -1079,17 +1023,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW io_global_by_file_by_latency (
-  file,
-  total,
-  total_latency,
-  count_read,
-  read_latency,
-  count_write,
-  write_latency,
-  count_misc,
-  misc_latency
-) AS
+VIEW io_global_by_file_by_latency AS
 SELECT file_name AS file, 
        count_star AS total, 
        round(sum_timer_wait / 1000000000000, 4) AS total_latency_sec,
@@ -1148,21 +1082,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW io_global_by_wait_by_bytes (
-  event_name,
-  total,
-  total_latency,
-  min_latency,
-  avg_latency,
-  max_latency,
-  count_read,
-  total_read,
-  avg_read,
-  count_write,
-  total_written,
-  avg_written,
-  total_requested
-) AS
+VIEW io_global_by_wait_by_bytes AS
 SELECT SUBSTRING_INDEX(event_name, '/', -2) event_name,
        count_star AS total,
        round(sum_timer_wait / 1000000000000, 4) AS total_latency_sec,
@@ -1642,6 +1562,69 @@ SELECT DIGEST_TEXT AS query,
        DIGEST AS digest,
        FIRST_SEEN AS first_seen,
        LAST_SEEN as last_seen
+  FROM performance_schema.events_statements_summary_by_digest
+ORDER BY SUM_TIMER_WAIT DESC;
+-- Copyright (c) 2014, 2015, Oracle and/or its affiliates. All rights reserved.
+--
+-- This program is free software; you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation; version 2 of the License.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program; if not, write to the Free Software
+-- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+
+--
+-- View: statement_analysis
+--
+-- Lists a normalized statement view with aggregated statistics,
+-- mimics the MySQL Enterprise Monitor Query Analysis view,
+-- ordered by the total execution time per normalized statement
+-- 
+-- mysql> select- * from statement_analysis limit 1\G
+-- *************************** 1. row--**************************
+--             query: SELECT * FROM `schema_object_o ... MA` , `information_schema` ...
+--                db: sys
+--         full_scan: *
+--        exec_count: 2
+--         err_count: 0
+--        warn_count: 0
+--     total_latency: 16.75 s
+--       max_latency: 16.57 s
+--       avg_latency: 8.38 s
+--      lock_latency: 16.69 s
+--         rows_sent: 84
+--     rows_sent_avg: 42
+--     rows_examined: 20012
+--     rows_affected: 0
+-- rows_affected_avg: 0
+-- rows_examined_avg: 10006
+--        tmp_tables: 378
+--   tmp_disk_tables: 66
+--       rows_sorted: 168
+-- sort_merge_passes: 0
+--            digest: 54f9bd520f0bbf15db0c2ed93386bec9
+--        first_seen: 2014-03-07 13:13:41
+--         last_seen: 2014-03-07 13:13:48
+--
+
+CREATE OR REPLACE
+  ALGORITHM = MERGE
+--  DEFINER = 'root'@'localhost'
+  SQL SECURITY INVOKER 
+VIEW statement_analysis_basic AS
+SELECT LEFT(REPLACE(DIGEST_TEXT, '\n', ' '), 100) AS query,
+       COUNT_STAR AS exec_count,
+       round(SUM_TIMER_WAIT / 1000000000000, 0) AS total_sec,
+       round(SUM_LOCK_TIME / 1000000000000, 0) AS lock_sec,
+       SUM_ROWS_SENT AS rows_sent,
+       SUM_ROWS_EXAMINED AS rows_examined,
+       SUM_ROWS_AFFECTED AS rows_affected
   FROM performance_schema.events_statements_summary_by_digest
 ORDER BY SUM_TIMER_WAIT DESC;
 -- Copyright (c) 2014, 2015, Oracle and/or its affiliates. All rights reserved.
@@ -2341,11 +2324,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW host_summary_by_file_io (
-  host,
-  ios,
-  io_latency
-) AS
+VIEW host_summary_by_file_io AS
 SELECT IF(host IS NULL, 'background', host) AS host,
        SUM(count_star) AS ios,
        round(SUM(sum_timer_wait) / 1000000000000, 4) AS io_latency_sec 
@@ -2392,18 +2371,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW host_summary_by_statement_type (
-  host,
-  statement,
-  total,
-  total_latency,
-  max_latency,
-  lock_latency,
-  rows_sent,
-  rows_examined,
-  rows_affected,
-  full_scans
-) AS
+VIEW host_summary_by_statement_type AS
 SELECT IF(host IS NULL, 'background', host) AS host,
        SUBSTRING_INDEX(event_name, '/', -1) AS statement,
        count_star AS total,
@@ -2451,17 +2419,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW host_summary_by_statement_latency (
-  host,
-  total,
-  total_latency,
-  max_latency,
-  lock_latency,
-  rows_sent,
-  rows_examined,
-  rows_affected,
-  full_scans
-) AS
+VIEW host_summary_by_statement_latency AS
 SELECT IF(host IS NULL, 'background', host) AS host,
        SUM(count_star) AS total,
        round(SUM(sum_timer_wait) / 1000000000000, 4) AS total_latency_sec,
@@ -2523,13 +2481,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW host_summary_by_stages (
-  host,
-  event_name,
-  total,
-  total_latency,
-  avg_latency
-) AS
+VIEW host_summary_by_stages AS
 SELECT IF(host IS NULL, 'background', host) AS host,
        event_name,
        count_star AS total,
@@ -2572,18 +2524,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW host_summary (
-  host,
-  statements,
-  statement_latency,
-  statement_avg_latency,
-  table_scans,
-  file_ios,
-  file_io_latency,
-  current_connections,
-  total_connections,
-  unique_users
-) AS
+VIEW host_summary AS
 SELECT IF(accounts.host IS NULL, 'background', accounts.host) AS host,
        SUM(stmt.total) AS statements,
        round(SUM(stmt.total_latency), 4) AS statement_latency_sec,
