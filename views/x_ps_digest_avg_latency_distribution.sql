@@ -13,8 +13,21 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
-SET NAMES utf8;
+--
+-- View: x$ps_digest_avg_latency_distribution
+--
+-- Helper view for x$ps_digest_95th_percentile_by_avg_us
+--
 
-CREATE DATABASE IF NOT EXISTS sys DEFAULT CHARACTER SET utf8;
-
-USE sys;
+CREATE OR REPLACE
+  ALGORITHM = TEMPTABLE
+--  DEFINER = 'root'@'localhost'
+  SQL SECURITY INVOKER 
+VIEW x$ps_digest_avg_latency_distribution (
+  cnt,
+  avg_us
+) AS
+SELECT COUNT(*) cnt, 
+       ROUND(avg_timer_wait/1000000) AS avg_us
+  FROM performance_schema.events_statements_summary_by_digest
+ GROUP BY avg_us;
