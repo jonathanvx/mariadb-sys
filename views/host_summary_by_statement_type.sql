@@ -37,18 +37,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW host_summary_by_statement_type (
-  host,
-  statement,
-  total,
-  total_latency,
-  max_latency,
-  lock_latency,
-  rows_sent,
-  rows_examined,
-  rows_affected,
-  full_scans
-) AS
+VIEW host_summary_by_statement_type AS
 SELECT IF(host IS NULL, 'background', host) AS host,
        SUBSTRING_INDEX(event_name, '/', -1) AS statement,
        count_star AS total,

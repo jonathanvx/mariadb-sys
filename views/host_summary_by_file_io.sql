@@ -33,11 +33,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW host_summary_by_file_io (
-  host,
-  ios,
-  io_latency
-) AS
+VIEW host_summary_by_file_io AS
 SELECT IF(host IS NULL, 'background', host) AS host,
        SUM(count_star) AS ios,
        round(SUM(sum_timer_wait) / 1000000000000, 4) AS io_latency_sec 

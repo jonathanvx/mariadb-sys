@@ -34,15 +34,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW innodb_buffer_stats_by_schema (
-  object_schema,
-  allocated,
-  data,
-  pages,
-  pages_hashed,
-  pages_old,
-  rows_cached
-) AS
+VIEW innodb_buffer_stats_by_schema AS
 SELECT IF(LOCATE('.', ibp.table_name) = 0, 'InnoDB System', REPLACE(SUBSTRING_INDEX(ibp.table_name, '.', 1), '`', '')) AS object_schema,
        round(SUM(IF(ibp.compressed_size = 0, 16384, compressed_size))/ 1073741824, 4) AS allocated_Gb,
        round(SUM(ibp.data_size)/ 1073741824, 4) AS data_Gb,

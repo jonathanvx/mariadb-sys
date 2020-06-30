@@ -32,17 +32,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW host_summary_by_statement_latency (
-  host,
-  total,
-  total_latency,
-  max_latency,
-  lock_latency,
-  rows_sent,
-  rows_examined,
-  rows_affected,
-  full_scans
-) AS
+VIEW host_summary_by_statement_latency AS
 SELECT IF(host IS NULL, 'background', host) AS host,
        SUM(count_star) AS total,
        round(SUM(sum_timer_wait) / 1000000000000, 4) AS total_latency_sec,

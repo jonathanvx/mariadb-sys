@@ -34,13 +34,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW latest_file_io (
-  thread,
-  file,
-  latency,
-  operation,
-  requested
-) AS
+VIEW latest_file_io AS
 SELECT IF(id IS NULL, 
              CONCAT(SUBSTRING_INDEX(name, '/', -1), ':', thread_id), 
              CONCAT(user, '@', host, ':', id)

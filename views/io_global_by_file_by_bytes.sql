@@ -34,17 +34,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW io_global_by_file_by_bytes (
-  file,
-  count_read,
-  total_read,
-  avg_read,
-  count_write,
-  total_written,
-  avg_write,
-  total,
-  write_pct
-) AS
+VIEW io_global_by_file_by_bytes AS
 SELECT file_name AS file, 
        count_read, 
        round(sum_number_of_bytes_read / 1073741824, 4) AS total_read_Gb,

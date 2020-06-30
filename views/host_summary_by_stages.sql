@@ -47,13 +47,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW host_summary_by_stages (
-  host,
-  event_name,
-  total,
-  total_latency,
-  avg_latency
-) AS
+VIEW host_summary_by_stages AS
 SELECT IF(host IS NULL, 'background', host) AS host,
        event_name,
        count_star AS total,

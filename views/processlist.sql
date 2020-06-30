@@ -48,29 +48,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER
-VIEW processlist (
-  thd_id,
-  conn_id,
-  user,
-  db,
-  command,
-  state,
-  time,
-  current_statement,
-  statement_latency,
-  lock_latency,
-  rows_examined,
-  rows_sent,
-  rows_affected,
-  tmp_tables,
-  tmp_disk_tables,
-  full_scan,
-  last_statement,
-  last_statement_latency,
-  last_wait,
-  last_wait_latency,
-  source
-) AS
+VIEW processlist AS
 SELECT pps.thread_id AS thd_id,
        pps.processlist_id AS conn_id,
        IF(pps.name = 'thread/sql/one_connection',
@@ -79,7 +57,7 @@ SELECT pps.thread_id AS thd_id,
        pps.processlist_db AS db,
        pps.processlist_command AS command,
        pps.processlist_state AS state,
-       pps.processlist_time AS time,
+       pps.processlist_time AS 'time',
        LEFT(REPLACE(pps.processlist_info, '\n', ' '), 100) AS current_statement,
        IF(esc.end_event_id IS NULL,
           round(esc.timer_wait / 1000000000000, 4),

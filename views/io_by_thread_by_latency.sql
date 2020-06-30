@@ -40,17 +40,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW io_by_thread_by_latency (
-  user,
-  total,
-  total_latency,
-  min_latency,
-  avg_latency,
-  max_latency,
-  thread_id,
-  processlist_id
-)
-AS
+VIEW io_by_thread_by_latency AS
 SELECT IF(processlist_id IS NULL, 
              SUBSTRING_INDEX(name, '/', -1), 
              CONCAT(processlist_user, '@', processlist_host)

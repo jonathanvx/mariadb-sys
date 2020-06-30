@@ -45,21 +45,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW io_global_by_wait_by_bytes (
-  event_name,
-  total,
-  total_latency,
-  min_latency,
-  avg_latency,
-  max_latency,
-  count_read,
-  total_read,
-  avg_read,
-  count_write,
-  total_written,
-  avg_written,
-  total_requested
-) AS
+VIEW io_global_by_wait_by_bytes AS
 SELECT SUBSTRING_INDEX(event_name, '/', -2) event_name,
        count_star AS total,
        round(sum_timer_wait / 1000000000000, 4) AS total_latency_sec,
