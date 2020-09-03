@@ -68,7 +68,19 @@ SELECT pst.object_schema AS table_schema,
        fsbi.count_misc AS io_misc_requests,
        round(fsbi.sum_timer_misc / 1000000000000, 4) AS io_misc_latency_sec
   FROM performance_schema.table_io_waits_summary_by_table AS pst
-  LEFT JOIN x$ps_schema_table_statistics_io AS fsbi
+  LEFT JOIN 
+      (SELECT LEFT(SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(file_name, '\\', '/'), '/', -2), '/', 1), 64) AS table_schema,
+       LEFT(SUBSTRING_INDEX(REPLACE(SUBSTRING_INDEX(REPLACE(file_name, '\\', '/'), '/', -1), '@0024', '$'), '.', 1), 64) AS table_name,
+       SUM(count_read) AS count_read,
+       SUM(sum_number_of_bytes_read) AS sum_number_of_bytes_read,
+       SUM(sum_timer_read) AS sum_timer_read,
+       SUM(count_write) AS count_write,
+       SUM(sum_number_of_bytes_write) AS sum_number_of_bytes_write,
+       SUM(sum_timer_write) AS sum_timer_write,
+       SUM(count_misc) AS count_misc,
+       SUM(sum_timer_misc) AS sum_timer_misc
+       FROM performance_schema.file_summary_by_instance
+       GROUP BY table_schema, table_name) AS fsbi
     ON pst.object_schema = fsbi.table_schema
    AND pst.object_name = fsbi.table_name
  ORDER BY pst.sum_timer_wait DESC;
