@@ -12,4 +12,4 @@ SELECT CONCAT(table_schema, '.', table_name) as schema_table,
        ROUND(data_free / ( 1024 * 1024 * 1024 ), 2) as data_frag,
        ROUND(index_length / data_length, 2) as index_frac
 FROM   information_schema.TABLES
-ORDER  BY data_length + index_length DESC;
+ORDER  BY data_length + index_length DESC limit 15;
