@@ -43,7 +43,7 @@ VIEW statements_with_temp_tables AS
 SELECT DIGEST_TEXT AS query,
        SCHEMA_NAME as db,
        COUNT_STAR AS exec_count,
-       round(SUM_TIMER_WAIT / 1000000000000, 4) as total_latency_sec,
+       round(SUM_TIMER_WAIT / 1000000000000, 0) as total_latency_sec,
        SUM_CREATED_TMP_TABLES AS memory_tmp_tables,
        SUM_CREATED_TMP_DISK_TABLES AS disk_tmp_tables,
        ROUND(IFNULL(SUM_CREATED_TMP_TABLES / NULLIF(COUNT_STAR, 0), 0)) AS avg_tmp_tables_per_query,

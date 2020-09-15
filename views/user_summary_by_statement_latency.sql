@@ -35,9 +35,9 @@ CREATE OR REPLACE
 VIEW user_summary_by_statement_latency AS
 SELECT IF(user IS NULL, 'background', user) AS user,
        SUM(count_star) AS total,
-       round(SUM(sum_timer_wait) / 1000000000000, 4) AS total_latency_sec,
-       round(SUM(max_timer_wait) / 1000000000000, 4) AS max_latency_sec,
-       round(SUM(sum_lock_time) / 1000000000000, 4) AS lock_latency_sec,
+       round(SUM(sum_timer_wait) / 1000000000000, 0) AS total_latency_sec,
+       round(SUM(max_timer_wait) / 1000000000000, 0) AS max_latency_sec,
+       round(SUM(sum_lock_time) / 1000000000000, 0) AS lock_latency_sec,
        SUM(sum_rows_sent) AS rows_sent,
        SUM(sum_rows_examined) AS rows_examined,
        SUM(sum_rows_affected) AS rows_affected,

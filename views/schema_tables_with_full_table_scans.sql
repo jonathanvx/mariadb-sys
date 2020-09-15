@@ -39,7 +39,7 @@ VIEW schema_tables_with_full_table_scans AS
 SELECT object_schema, 
        object_name,
        count_read AS rows_full_scanned,
-       round(sum_timer_wait / 1000000000000, 4) AS latency_sec
+       round(sum_timer_wait / 1000000000000, 0) AS latency_sec
   FROM performance_schema.table_io_waits_summary_by_index_usage 
  WHERE index_name IS NULL
    AND count_read > 0

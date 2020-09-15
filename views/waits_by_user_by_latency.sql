@@ -48,9 +48,9 @@ VIEW waits_by_user_by_latency AS
 SELECT IF(user IS NULL, 'background', user) AS user,
        event_name AS event,
        count_star AS total,
-       round(sum_timer_wait / 1000000000000, 4) AS total_latency_sec,
-       round(avg_timer_wait / 1000000000000, 4) AS avg_latency_sec,
-       round(max_timer_wait / 1000000000000, 4) AS max_latency_sec
+       round(sum_timer_wait / 1000000000000, 0) AS total_latency_sec,
+       round(avg_timer_wait / 1000000000000, 0) AS avg_latency_sec,
+       round(max_timer_wait / 1000000000000, 0) AS max_latency_sec
   FROM performance_schema.events_waits_summary_by_user_by_event_name
  WHERE event_name != 'idle'
    AND user IS NOT NULL

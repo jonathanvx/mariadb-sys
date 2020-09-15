@@ -51,8 +51,8 @@ VIEW user_summary_by_stages AS
 SELECT IF(user IS NULL, 'background', user) AS user,
        event_name,
        count_star AS total,
-       round(sum_timer_wait / 1000000000000, 4) AS total_latency_sec, 
-       round(avg_timer_wait / 1000000000000, 4) AS avg_latency_sec 
+       round(sum_timer_wait / 1000000000000, 0) AS total_latency_sec, 
+       round(avg_timer_wait / 1000000000000, 0) AS avg_latency_sec 
   FROM performance_schema.events_stages_summary_by_user_by_event_name
  WHERE sum_timer_wait != 0 
  ORDER BY user, sum_timer_wait DESC;

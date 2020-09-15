@@ -46,10 +46,10 @@ SELECT IF(processlist_id IS NULL,
              CONCAT(processlist_user, '@', processlist_host)
           ) user, 
        SUM(count_star) total,
-       round(SUM(sum_timer_wait) / 1000000000000, 4) total_latency_sec,
-       round(MIN(min_timer_wait) / 1000000000000, 4) min_latency_sec,
-       round(AVG(avg_timer_wait) / 1000000000000, 4) avg_latency_sec,
-       round(MAX(max_timer_wait) / 1000000000000, 4) max_latency_sec,
+       round(SUM(sum_timer_wait) / 1000000000000, 0) total_latency_sec,
+       round(MIN(min_timer_wait) / 1000000000000, 0) min_latency_sec,
+       round(AVG(avg_timer_wait) / 1000000000000, 0) avg_latency_sec,
+       round(MAX(max_timer_wait) / 1000000000000, 0) max_latency_sec,
        thread_id,
        processlist_id
   FROM performance_schema.events_waits_summary_by_thread_by_event_name 

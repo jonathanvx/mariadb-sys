@@ -41,13 +41,13 @@ SELECT OBJECT_SCHEMA AS table_schema,
        OBJECT_NAME AS table_name,
        INDEX_NAME as index_name,
        COUNT_FETCH AS rows_selected,
-       round(SUM_TIMER_FETCH / 1000000000000, 4) AS select_latency_sec,
+       round(SUM_TIMER_FETCH / 1000000000000, 0) AS select_latency_sec,
        COUNT_INSERT AS rows_inserted,
-       round(SUM_TIMER_INSERT / 1000000000000, 4) AS insert_latency_sec,
+       round(SUM_TIMER_INSERT / 1000000000000, 0) AS insert_latency_sec,
        COUNT_UPDATE AS rows_updated,
-       round(SUM_TIMER_UPDATE / 1000000000000, 4) AS update_latency_sec,
+       round(SUM_TIMER_UPDATE / 1000000000000, 0) AS update_latency_sec,
        COUNT_DELETE AS rows_deleted,
-       round(SUM_TIMER_INSERT / 1000000000000, 4) AS delete_latency_sec
+       round(SUM_TIMER_INSERT / 1000000000000, 0) AS delete_latency_sec
   FROM performance_schema.table_io_waits_summary_by_index_usage
  WHERE index_name IS NOT NULL
  ORDER BY sum_timer_wait DESC;

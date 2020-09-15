@@ -49,7 +49,7 @@ VIEW statements_with_full_table_scans AS
 SELECT DIGEST_TEXT AS query,
        SCHEMA_NAME as db,
        COUNT_STAR AS exec_count,
-       round(SUM_TIMER_WAIT / 1000000000000, 4) AS total_latency_sec,
+       round(SUM_TIMER_WAIT / 1000000000000, 0) AS total_latency_sec,
        SUM_NO_INDEX_USED AS no_index_used_count,
        SUM_NO_GOOD_INDEX_USED AS no_good_index_used_count,
        ROUND(IFNULL(SUM_NO_INDEX_USED / NULLIF(COUNT_STAR, 0), 0) * 100) AS no_index_used_pct,
