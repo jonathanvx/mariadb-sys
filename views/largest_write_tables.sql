@@ -50,23 +50,23 @@ CREATE OR REPLACE
 VIEW schema_table_statistics AS
 SELECT pst.object_schema AS table_schema,
        pst.object_name AS table_name,
-       round(pst.sum_timer_wait / 1000000000000, 4) AS total_latency_sec,
+       round(pst.sum_timer_wait / 1000000000000, 0) AS total_latency_sec,
        pst.count_fetch AS rows_fetched,
-       round(pst.sum_timer_fetch / 1000000000000, 4) AS fetch_latency_sec,
+       round(pst.sum_timer_fetch / 1000000000000, 0) AS fetch_latency_sec,
        pst.count_insert AS rows_inserted,
-       round(pst.sum_timer_insert / 1000000000000, 4) AS insert_latency_sec,
+       round(pst.sum_timer_insert / 1000000000000, 0) AS insert_latency_sec,
        pst.count_update AS rows_updated,
-       round(pst.sum_timer_update / 1000000000000, 4) AS update_latency_sec,
+       round(pst.sum_timer_update / 1000000000000, 0) AS update_latency_sec,
        pst.count_delete AS rows_deleted,
-       round(pst.sum_timer_delete / 1000000000000, 4) AS delete_latency_sec,
+       round(pst.sum_timer_delete / 1000000000000, 0) AS delete_latency_sec,
        fsbi.count_read AS io_read_requests,
        round(fsbi.sum_number_of_bytes_read / 1073741824, 4) AS io_read_Gb,
-       round(fsbi.sum_timer_read / 1000000000000, 4) AS io_read_latency_sec,
+       round(fsbi.sum_timer_read / 1000000000000, 0) AS io_read_latency_sec,
        fsbi.count_write AS io_write_requests,
        round(fsbi.sum_number_of_bytes_write / 1073741824, 4) AS io_write_Gb,
-       round(fsbi.sum_timer_write / 1000000000000, 4) AS io_write_latency_sec,
+       round(fsbi.sum_timer_write / 1000000000000, 0) AS io_write_latency_sec,
        fsbi.count_misc AS io_misc_requests,
-       round(fsbi.sum_timer_misc / 1000000000000, 4) AS io_misc_latency_sec
+       round(fsbi.sum_timer_misc / 1000000000000, 0) AS io_misc_latency_sec
   FROM performance_schema.table_io_waits_summary_by_table AS pst
   LEFT JOIN 
       (SELECT LEFT(SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(file_name, '\\', '/'), '/', -2), '/', 1), 64) AS table_schema,
@@ -83,4 +83,4 @@ SELECT pst.object_schema AS table_schema,
        GROUP BY table_schema, table_name) AS fsbi
     ON pst.object_schema = fsbi.table_schema
    AND pst.object_name = fsbi.table_name
- ORDER BY io_write_Gb DESC limit 15;
+ ORDER BY (pst.sum_timer_wait - pst.sum_timer_fetch) DESC limit 15;
