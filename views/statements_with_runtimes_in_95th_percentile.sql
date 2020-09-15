@@ -52,6 +52,20 @@ SELECT DIGEST_TEXT AS query,
        LAST_SEEN AS last_seen,
        DIGEST AS digest
   FROM performance_schema.events_statements_summary_by_digest stmts
-  JOIN sys.x$ps_digest_95th_percentile_by_avg_us AS top_percentile
+  JOIN (SELECT s2.avg_us avg_us,
+       IFNULL(SUM(s1.cnt)/NULLIF((SELECT COUNT(*) FROM performance_schema.events_statements_summary_by_digest), 0), 0) percentile
+       FROM (SELECT COUNT(*) cnt, 
+        ROUND(avg_timer_wait/1000000) AS avg_us
+        FROM performance_schema.events_statements_summary_by_digest
+        GROUP BY avg_us) AS s1
+        JOIN (SELECT COUNT(*) cnt, 
+        ROUND(avg_timer_wait/1000000) AS avg_us
+        FROM performance_schema.events_statements_summary_by_digest
+        GROUP BY avg_us) AS s2
+        ON s1.avg_us <= s2.avg_us
+        GROUP BY s2.avg_us
+        HAVING IFNULL(SUM(s1.cnt)/NULLIF((SELECT COUNT(*) FROM performance_schema.events_statements_summary_by_digest), 0), 0) > 0.95
+        ORDER BY percentile
+        LIMIT 1) AS top_percentile
     ON ROUND(stmts.avg_timer_wait/1000000) >= top_percentile.avg_us
  ORDER BY AVG_TIMER_WAIT DESC;
