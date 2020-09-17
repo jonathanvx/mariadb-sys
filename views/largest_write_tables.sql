@@ -50,6 +50,7 @@ CREATE OR REPLACE
 VIEW schema_table_statistics AS
 SELECT pst.object_schema AS table_schema,
        pst.object_name AS table_name,
+       fsbi.count_write,
        round(pst.sum_timer_wait / 1000000000000, 0) AS total_latency_sec,
        pst.count_fetch AS rows_fetched,
        round(pst.sum_timer_fetch / 1000000000000, 0) AS fetch_latency_sec,
