@@ -1,4 +1,4 @@
-ECHO > maria_sys.sql
+CAT before_setup.sql > maria_sys.sql
 
 CAT ./views/full_processlist.sql >> maria_sys.sql
 CAT ./views/innodb_lock_waits.sql >> maria_sys.sql
