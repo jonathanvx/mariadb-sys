@@ -332,9 +332,10 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW schema_table_statistics AS
+VIEW largest_read_tables AS
 SELECT pst.object_schema AS table_schema,
        pst.object_name AS table_name,
+       fsbi.count_read,
        round(pst.sum_timer_wait / 1000000000000, 0) AS total_latency_sec,
        pst.count_fetch AS rows_fetched,
        round(pst.sum_timer_fetch / 1000000000000, 0) AS fetch_latency_sec,
@@ -369,6 +370,7 @@ SELECT pst.object_schema AS table_schema,
     ON pst.object_schema = fsbi.table_schema
    AND pst.object_name = fsbi.table_name
  ORDER BY pst.sum_timer_fetch DESC limit 15;
+
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
@@ -433,9 +435,10 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW schema_table_statistics AS
+VIEW largest_write_tables AS
 SELECT pst.object_schema AS table_schema,
        pst.object_name AS table_name,
+       fsbi.count_write,
        round(pst.sum_timer_wait / 1000000000000, 0) AS total_latency_sec,
        pst.count_fetch AS rows_fetched,
        round(pst.sum_timer_fetch / 1000000000000, 0) AS fetch_latency_sec,
@@ -470,6 +473,7 @@ SELECT pst.object_schema AS table_schema,
     ON pst.object_schema = fsbi.table_schema
    AND pst.object_name = fsbi.table_name
  ORDER BY (pst.sum_timer_wait - pst.sum_timer_fetch) DESC limit 15;
+
 -- Copyright (c) 2014, 2015, Oracle and/or its affiliates. All rights reserved.
 --
 -- This program is free software; you can redistribute it and/or modify
@@ -1511,6 +1515,10 @@ SELECT event_name AS event,
  WHERE event_name != 'idle'
    AND sum_timer_wait > 0
  ORDER BY sum_timer_wait DESC;
+-- This stored procedure allows you to create a view for the statements associated with a particular table on a particular schema. 
+-- It is similar to statament_analysis view with an additional WHERE clause to filter results on the table provided into the stored procedure.
+
+DROP PROCEDURE IF EXISTS create_table_statement_view;
 DELIMITER $$
 
 CREATE PROCEDURE create_table_statement_view(IN i_db varchar(255), IN i_table varchar(255))
@@ -1575,6 +1583,8 @@ DELIMITER ;
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+-- This stored procedure resets all the performance_schema information by truncating the tables inside of the schema.
 
 DROP PROCEDURE IF EXISTS ps_reset_tables;
 

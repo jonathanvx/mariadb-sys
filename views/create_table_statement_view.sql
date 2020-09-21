@@ -1,6 +1,7 @@
 -- This stored procedure allows you to create a view for the statements associated with a particular table on a particular schema. 
 -- It is similar to statament_analysis view with an additional WHERE clause to filter results on the table provided into the stored procedure.
 
+DROP PROCEDURE IF EXISTS create_table_statement_view;
 DELIMITER $$
 
 CREATE PROCEDURE create_table_statement_view(IN i_db varchar(255), IN i_table varchar(255))

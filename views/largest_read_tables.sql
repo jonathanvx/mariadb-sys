@@ -47,7 +47,7 @@ CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW schema_table_statistics AS
+VIEW largest_read_tables AS
 SELECT pst.object_schema AS table_schema,
        pst.object_name AS table_name,
        fsbi.count_read,
@@ -85,3 +85,4 @@ SELECT pst.object_schema AS table_schema,
     ON pst.object_schema = fsbi.table_schema
    AND pst.object_name = fsbi.table_name
  ORDER BY pst.sum_timer_fetch DESC limit 15;
+
