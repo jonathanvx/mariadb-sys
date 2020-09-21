@@ -1,3 +1,23 @@
+-- Copyright (c) 2014, 2015, Oracle and/or its affiliates. All rights reserved.
+--
+-- This program is free software; you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation; version 2 of the License.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program; if not, write to the Free Software
+-- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+SET NAMES utf8;
+
+CREATE DATABASE IF NOT EXISTS sys DEFAULT CHARACTER SET utf8;
+
+USE sys;
 
 DROP PROCEDURE IF EXISTS create_table_statement_view;
 DELIMITER $$
@@ -50,14 +70,7 @@ END $$
 
 DELIMITER ;
 
---
---
---
 
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
@@ -100,15 +113,7 @@ SELECT pps.thread_id AS thd_id,
  WHERE pps.processlist_command NOT IN ('Sleep', 'Binlog Dump')
  AND pps.processlist_id <> CONNECTION_ID()
  ORDER BY pps.processlist_time DESC, last_wait_latency_sec DESC;
---
---
---
 
---
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
@@ -173,14 +178,7 @@ SELECT r.trx_wait_started AS wait_started,
        INNER JOIN information_schema.innodb_locks bl ON bl.lock_id = w.blocking_lock_id
        INNER JOIN information_schema.innodb_locks rl ON rl.lock_id = w.requested_lock_id
  ORDER BY r.trx_wait_started;
---
---
---
 
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
@@ -238,14 +236,7 @@ SELECT CONCAT(table_schema, '.', table_name) as schema_table,
        ROUND(index_length / data_length, 2) as index_frac
 FROM   information_schema.TABLES
 ORDER  BY data_length + index_length DESC limit 15;
---
---
---
 
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
@@ -289,14 +280,7 @@ SELECT pst.object_schema AS table_schema,
    AND pst.object_name = fsbi.table_name
  ORDER BY (pst.sum_timer_wait - pst.sum_timer_fetch) DESC limit 15;
 
---
---
---
 
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
@@ -339,9 +323,6 @@ SELECT pps.thread_id AS thd_id,
  WHERE pps.processlist_command NOT IN ('Sleep', 'Binlog Dump')
  AND pps.processlist_id <> CONNECTION_ID()
  ORDER BY pps.processlist_time DESC, last_wait_latency_sec DESC;
---
---
---
 
 
 DROP PROCEDURE IF EXISTS ps_reset_tables;
@@ -353,26 +334,20 @@ CREATE PROCEDURE ps_reset_tables (
     )
     COMMENT '
              Description
-             -----------
 
              Truncates all summary tables within Performance Schema, 
              resetting all aggregated instrumentation as a snapshot.
 
              Parameters
-             -----------
 
              in_verbose (BOOLEAN):
                Whether to print each TRUNCATE statement before running
 
              Example
-             -----------
 
              mysql> CALL sys.ps_truncate_all_tables(false);
-             +---------------------+
              | summary             |
-             +---------------------+
              | Truncated 44 tables |
-             +---------------------+
              1 row in set (0.10 sec)
 
              Query OK, 0 rows affected (0.10 sec)
@@ -420,10 +395,6 @@ END$$
 
 DELIMITER ;
 
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
@@ -472,15 +443,7 @@ SELECT TABLE_SCHEMA,
    AND TABLE_TYPE='BASE TABLE'
    AND EXTRA='auto_increment'
  ORDER BY auto_increment DESC;
---
---
---
 
---
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
@@ -500,9 +463,6 @@ SELECT OBJECT_SCHEMA AS table_schema,
   FROM performance_schema.table_io_waits_summary_by_index_usage
  WHERE index_name IS NOT NULL
  ORDER BY sum_timer_wait DESC;
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
@@ -582,14 +542,7 @@ VIEW schema_redundant_indexes (
         AND dominant_keys.non_unique = 0
       )
     );
---
---
---
 
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
@@ -631,14 +584,7 @@ SELECT pst.object_schema AS table_schema,
     ON pst.object_schema = fsbi.table_schema
    AND pst.object_name = fsbi.table_name
  ORDER BY pst.sum_timer_wait DESC;
---
---
---
 
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
@@ -652,15 +598,7 @@ SELECT object_schema,
  WHERE index_name IS NULL
    AND count_read > 0
  ORDER BY count_read DESC;
---
---
---
 
---
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
@@ -679,13 +617,7 @@ SELECT object_schema,
    AND object_schema != 'mysql'
    AND index_name != 'PRIMARY'
  ORDER BY object_schema, object_name;
---
---
---
 
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
@@ -716,15 +648,7 @@ SELECT DIGEST_TEXT AS query,
        LAST_SEEN as last_seen
   FROM performance_schema.events_statements_summary_by_digest
 ORDER BY SUM_TIMER_WAIT DESC;
---
---
---
 
---
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
@@ -751,14 +675,7 @@ SELECT DIGEST_TEXT AS query,
    AND SCHEMA_NAME NOT IN ('performance_schema','information_schema','mysql')
  ORDER BY no_index_used_pct DESC, total_latency_sec DESC;
 
---
---
---
 
---
---
---
---
 
 CREATE OR REPLACE
   ALGORITHM = MERGE
