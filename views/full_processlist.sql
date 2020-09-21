@@ -84,4 +84,5 @@ SELECT pps.thread_id AS thd_id,
   LEFT JOIN performance_schema.events_waits_current AS ewc USING (thread_id)
   LEFT JOIN performance_schema.events_statements_current as esc USING (thread_id)
  WHERE pps.processlist_command NOT IN ('Sleep', 'Binlog Dump')
+ AND pps.processlist_id <> CONNECTION_ID()
  ORDER BY pps.processlist_time DESC, last_wait_latency_sec DESC;
