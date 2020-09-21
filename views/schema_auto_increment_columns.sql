@@ -63,4 +63,4 @@ SELECT TABLE_SCHEMA,
  WHERE TABLE_SCHEMA NOT IN ('mysql', 'sys', 'INFORMATION_SCHEMA', 'performance_schema')
    AND TABLE_TYPE='BASE TABLE'
    AND EXTRA='auto_increment'
- ORDER BY auto_increment_ratio DESC, max_value;
+ ORDER BY auto_increment DESC;

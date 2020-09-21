@@ -64,4 +64,6 @@ SELECT DIGEST_TEXT AS query,
  WHERE (SUM_NO_INDEX_USED > 0
     OR SUM_NO_GOOD_INDEX_USED > 0)
    AND DIGEST_TEXT NOT LIKE 'SHOW%'
+   AND SCHEMA_NAME NOT IN ('performance_schema','information_schema','mysql')
  ORDER BY no_index_used_pct DESC, total_latency_sec DESC;
+
