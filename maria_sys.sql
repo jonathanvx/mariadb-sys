@@ -329,23 +329,16 @@ DROP PROCEDURE IF EXISTS ps_reset_tables;
 
 DELIMITER $$
 
-CREATE PROCEDURE ps_reset_tables (
-        IN in_verbose BOOLEAN
-    )
+CREATE PROCEDURE ps_reset_tables ()
     COMMENT '
              Description
 
              Truncates all summary tables within Performance Schema, 
              resetting all aggregated instrumentation as a snapshot.
 
-             Parameters
-
-             in_verbose (BOOLEAN):
-               Whether to print each TRUNCATE statement before running
-
              Example
 
-             mysql> CALL sys.ps_truncate_all_tables(false);
+             mysql> CALL sys.ps_truncate_all_tables();
              | summary             |
              | Truncated 44 tables |
              1 row in set (0.10 sec)
@@ -376,9 +369,6 @@ BEGIN
         END IF;
 
         SET @truncate_stmt := CONCAT('TRUNCATE TABLE performance_schema.', v_ps_table);
-        IF in_verbose THEN
-            SELECT CONCAT('Running: ', @truncate_stmt) AS status;
-        END IF;
 
         PREPARE truncate_stmt FROM @truncate_stmt;
         EXECUTE truncate_stmt;
