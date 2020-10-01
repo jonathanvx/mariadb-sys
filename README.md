@@ -21,3 +21,43 @@ There is bash script within the root of the branch directory, called `create_sys
 
 This includes substitution parameters for the MySQL user to use, and whether to include or exclude `SET sql_log_bin` commands from the scripts. This is particularly useful for installations such as Amazon RDS, which do not have the root@localhost user, or disallow setting sql_log_bin.
 
+
+## Overview ##
+
+### Tables Overview (hotspots) ###
+
+largest_read_tables.sql
+largest_tables.sql
+largest_write_tables.sql
+
+
+### Query Digests ###
+
+statement_analysis.sql
+statements_with_full_table_scans.sql
+user_summary_by_statement_type.sql
+schema_tables_with_full_table_scans.sql
+create_table_statement_view.sql
+
+
+### Real-time monitoring ###
+
+processlist.sql
+full_processlist.sql
+innodb_lock_waits.sql
+
+
+### Tables & Index Information ###
+
+schema_index_statistics.sql 
+schema_table_statistics.sql 
+schema_auto_increment_columns.sql
+schema_redundant_indexes.sql
+schema_unused_indexes.sql
+
+
+### Tools ###
+
+ps_reset_tables.sql
+
+
