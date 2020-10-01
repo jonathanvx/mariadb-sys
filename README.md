@@ -26,38 +26,38 @@ This includes substitution parameters for the MySQL user to use, and whether to 
 
 ### Tables Overview (hotspots) ###
 
-largest_read_tables.sql
-largest_tables.sql
-largest_write_tables.sql
+- largest_read_tables
+- largest_tables
+- largest_write_tables
 
 
 ### Query Digests ###
 
-statement_analysis.sql
-statements_with_full_table_scans.sql
-user_summary_by_statement_type.sql
-schema_tables_with_full_table_scans.sql
-create_table_statement_view.sql
+- statement_analysis
+- statements_with_full_table_scans
+- user_summary_by_statement_type
+- schema_tables_with_full_table_scans
+- create_table_statement_view
 
 
 ### Real-time monitoring ###
 
-processlist.sql
-full_processlist.sql
-innodb_lock_waits.sql
+- processlist
+- full_processlist
+- innodb_lock_waits
 
 
 ### Tables & Index Information ###
 
-schema_index_statistics.sql 
-schema_table_statistics.sql 
-schema_auto_increment_columns.sql
-schema_redundant_indexes.sql
-schema_unused_indexes.sql
+- schema_index_statistics 
+- schema_table_statistics 
+- schema_auto_increment_columns
+- schema_redundant_indexes
+- schema_unused_indexes
 
 
 ### Tools ###
 
-ps_reset_tables.sql
+- ps_reset_tables
 
 
