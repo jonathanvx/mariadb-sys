@@ -183,27 +183,16 @@ SELECT r.trx_wait_started AS wait_started,
 CREATE OR REPLACE
   ALGORITHM = TEMPTABLE
   SQL SECURITY INVOKER 
-VIEW largest_read_tables AS
+VIEW largest_write_tables AS
 SELECT pst.object_schema AS table_schema,
        pst.object_name AS table_name,
        fsbi.count_read,
-       round(pst.sum_timer_wait / 1000000000000, 0) AS total_latency_sec,
-       pst.count_fetch AS rows_fetched,
-       round(pst.sum_timer_fetch / 1000000000000, 0) AS fetch_latency_sec,
-       pst.count_insert AS rows_inserted,
-       round(pst.sum_timer_insert / 1000000000000, 0) AS insert_latency_sec,
-       pst.count_update AS rows_updated,
-       round(pst.sum_timer_update / 1000000000000, 0) AS update_latency_sec,
-       pst.count_delete AS rows_deleted,
-       round(pst.sum_timer_delete / 1000000000000, 0) AS delete_latency_sec,
-       fsbi.count_read AS io_read_requests,
-       round(fsbi.sum_number_of_bytes_read / 1073741824, 4) AS io_read_Gb,
-       round(fsbi.sum_timer_read / 1000000000000, 0) AS io_read_latency_sec,
-       fsbi.count_write AS io_write_requests,
-       round(fsbi.sum_number_of_bytes_write / 1073741824, 4) AS io_write_Gb,
-       round(fsbi.sum_timer_write / 1000000000000, 0) AS io_write_latency_sec,
-       fsbi.count_misc AS io_misc_requests,
-       round(fsbi.sum_timer_misc / 1000000000000, 0) AS io_misc_latency_sec
+       round(pst.sum_timer_wait / 1000000000000, 0) AS total_sec,
+       round(pst.sum_timer_fetch / 1000000000000, 0) AS select_sec,
+       round(pst.sum_timer_insert / 1000000000000, 0) AS insert_sec,
+       round(pst.sum_timer_update / 1000000000000, 0) AS update_sec,
+       round(pst.sum_timer_delete / 1000000000000, 0) AS delete_sec,
+       round(fsbi.sum_number_of_bytes_read / 1073741824, 4) AS io_read_Gb
   FROM performance_schema.table_io_waits_summary_by_table AS pst
   LEFT JOIN 
       (SELECT LEFT(SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(file_name, '\\', '/'), '/', -2), '/', 1), 64) AS table_schema,
@@ -220,6 +209,7 @@ SELECT pst.object_schema AS table_schema,
        GROUP BY table_schema, table_name) AS fsbi
     ON pst.object_schema = fsbi.table_schema
    AND pst.object_name = fsbi.table_name
+   WHERE table_schema NOT IN ('performance_schema','mysql','information_schema')
  ORDER BY pst.sum_timer_fetch DESC limit 15;
 
 
@@ -245,23 +235,12 @@ VIEW largest_write_tables AS
 SELECT pst.object_schema AS table_schema,
        pst.object_name AS table_name,
        fsbi.count_write,
-       round(pst.sum_timer_wait / 1000000000000, 0) AS total_latency_sec,
-       pst.count_fetch AS rows_fetched,
-       round(pst.sum_timer_fetch / 1000000000000, 0) AS fetch_latency_sec,
-       pst.count_insert AS rows_inserted,
-       round(pst.sum_timer_insert / 1000000000000, 0) AS insert_latency_sec,
-       pst.count_update AS rows_updated,
-       round(pst.sum_timer_update / 1000000000000, 0) AS update_latency_sec,
-       pst.count_delete AS rows_deleted,
-       round(pst.sum_timer_delete / 1000000000000, 0) AS delete_latency_sec,
-       fsbi.count_read AS io_read_requests,
-       round(fsbi.sum_number_of_bytes_read / 1073741824, 4) AS io_read_Gb,
-       round(fsbi.sum_timer_read / 1000000000000, 0) AS io_read_latency_sec,
-       fsbi.count_write AS io_write_requests,
-       round(fsbi.sum_number_of_bytes_write / 1073741824, 4) AS io_write_Gb,
-       round(fsbi.sum_timer_write / 1000000000000, 0) AS io_write_latency_sec,
-       fsbi.count_misc AS io_misc_requests,
-       round(fsbi.sum_timer_misc / 1000000000000, 0) AS io_misc_latency_sec
+       round(pst.sum_timer_wait / 1000000000000, 0) AS total_sec,
+       round(pst.sum_timer_fetch / 1000000000000, 0) AS select_sec,
+       round(pst.sum_timer_insert / 1000000000000, 0) AS insert_sec,
+       round(pst.sum_timer_update / 1000000000000, 0) AS update_sec,
+       round(pst.sum_timer_delete / 1000000000000, 0) AS delete_sec,
+       round(fsbi.sum_number_of_bytes_write / 1073741824, 4) AS io_write_Gb
   FROM performance_schema.table_io_waits_summary_by_table AS pst
   LEFT JOIN 
       (SELECT LEFT(SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(file_name, '\\', '/'), '/', -2), '/', 1), 64) AS table_schema,
@@ -278,6 +257,7 @@ SELECT pst.object_schema AS table_schema,
        GROUP BY table_schema, table_name) AS fsbi
     ON pst.object_schema = fsbi.table_schema
    AND pst.object_name = fsbi.table_name
+   WHERE table_schema NOT IN ('performance_schema','mysql','information_schema')
  ORDER BY (pst.sum_timer_wait - pst.sum_timer_fetch) DESC limit 15;
 
 
@@ -613,7 +593,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
   SQL SECURITY INVOKER 
 VIEW statement_analysis AS
-SELECT DIGEST_TEXT AS query,
+SELECT REPLACE(REPLACE(REPLACE(REPLACE(DIGEST_TEXT, "` . `", "."),"` , `", ", "), "`","")," . *", ".*") AS query,
        SCHEMA_NAME AS db,
        IF(SUM_NO_GOOD_INDEX_USED > 0 OR SUM_NO_INDEX_USED > 0, '*', '') AS full_scan,
        COUNT_STAR AS exec_count,
@@ -637,6 +617,7 @@ SELECT DIGEST_TEXT AS query,
        FIRST_SEEN AS first_seen,
        LAST_SEEN as last_seen
   FROM performance_schema.events_statements_summary_by_digest
+  WHERE LAST_SEEN >= NOW() - INTERVAL 7 DAY
 ORDER BY SUM_TIMER_WAIT DESC;
 
 
@@ -663,6 +644,36 @@ SELECT DIGEST_TEXT AS query,
     OR SUM_NO_GOOD_INDEX_USED > 0)
    AND DIGEST_TEXT NOT LIKE 'SHOW%'
    AND SCHEMA_NAME NOT IN ('performance_schema','information_schema','mysql')
+ ORDER BY no_index_used_pct DESC, total_latency_sec DESC;
+
+
+
+CREATE OR REPLACE
+  ALGORITHM = MERGE
+  SQL SECURITY INVOKER 
+VIEW statements_with_full_table_scans AS
+SELECT DIGEST_TEXT AS query,
+       SCHEMA_NAME as db,
+       COUNT_STAR AS exec_count,
+       round(SUM_TIMER_WAIT / 1000000000000, 0) AS total_latency_sec,
+       SUM_NO_INDEX_USED AS no_index_used_count,
+       SUM_NO_GOOD_INDEX_USED AS no_good_index_used_count,
+       ROUND(IFNULL(SUM_NO_INDEX_USED / NULLIF(COUNT_STAR, 0), 0) * 100) AS no_index_used_pct,
+       SUM_ROWS_SENT AS rows_sent,
+       SUM_ROWS_EXAMINED AS rows_examined,
+       ROUND(SUM_ROWS_SENT/COUNT_STAR) AS rows_sent_avg,
+       ROUND(SUM_ROWS_EXAMINED/COUNT_STAR) AS rows_examined_avg,
+       FIRST_SEEN as first_seen,
+       LAST_SEEN as last_seen,
+       DIGEST AS digest
+  FROM performance_schema.events_statements_summary_by_digest
+ WHERE (SUM_NO_INDEX_USED > 0
+    OR SUM_NO_GOOD_INDEX_USED > 0)
+   AND DIGEST_TEXT NOT LIKE 'SHOW%'
+   AND SCHEMA_NAME NOT IN ('performance_schema','information_schema','mysql')
+   AND (SUM_ROWS_EXAMINED/SUM_ROWS_SENT) >1
+   AND (SCHEMA_NAME IS NOT NULL or SCHEMA_NAME <> 'NULL')
+   AND LAST_SEEN >= NOW() - INTERVAL 7 DAY 
  ORDER BY no_index_used_pct DESC, total_latency_sec DESC;
 
 

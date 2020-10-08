@@ -52,7 +52,7 @@ CREATE OR REPLACE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
 VIEW statement_analysis AS
-SELECT DIGEST_TEXT AS query,
+SELECT REPLACE(REPLACE(REPLACE(REPLACE(DIGEST_TEXT, "` . `", "."),"` , `", ", "), "`","")," . *", ".*") AS query,
        SCHEMA_NAME AS db,
        IF(SUM_NO_GOOD_INDEX_USED > 0 OR SUM_NO_INDEX_USED > 0, '*', '') AS full_scan,
        COUNT_STAR AS exec_count,
@@ -76,4 +76,5 @@ SELECT DIGEST_TEXT AS query,
        FIRST_SEEN AS first_seen,
        LAST_SEEN as last_seen
   FROM performance_schema.events_statements_summary_by_digest
+  WHERE LAST_SEEN >= NOW() - INTERVAL 7 DAY
 ORDER BY SUM_TIMER_WAIT DESC;
