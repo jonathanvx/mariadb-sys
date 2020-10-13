@@ -64,9 +64,10 @@ SELECT DIGEST_TEXT AS query,
  WHERE (SUM_NO_INDEX_USED > 0
     OR SUM_NO_GOOD_INDEX_USED > 0)
    AND DIGEST_TEXT NOT LIKE 'SHOW%'
-   AND SCHEMA_NAME NOT IN ('performance_schema','information_schema','mysql')
+   AND SCHEMA_NAME NOT IN ('performance_schema','information_schema','mysql','sys')
    AND (SUM_ROWS_EXAMINED/SUM_ROWS_SENT) >1
    AND (SCHEMA_NAME IS NOT NULL or SCHEMA_NAME <> 'NULL')
    AND LAST_SEEN >= NOW() - INTERVAL 7 DAY 
+   AND DIGEST_TEXT LIKE '%WHERE%'
  ORDER BY no_index_used_pct DESC, total_latency_sec DESC;
 

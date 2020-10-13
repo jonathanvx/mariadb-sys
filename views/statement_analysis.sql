@@ -52,7 +52,7 @@ CREATE OR REPLACE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
 VIEW statement_analysis AS
-SELECT REPLACE(REPLACE(REPLACE(REPLACE(DIGEST_TEXT, "` . `", "."),"` , `", ", "), "`","")," . *", ".*") AS query,
+SELECT DIGEST_TEXT AS query,
        SCHEMA_NAME AS db,
        IF(SUM_NO_GOOD_INDEX_USED > 0 OR SUM_NO_INDEX_USED > 0, '*', '') AS full_scan,
        COUNT_STAR AS exec_count,
