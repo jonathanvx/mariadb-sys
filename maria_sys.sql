@@ -217,7 +217,8 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
   SQL SECURITY INVOKER 
 VIEW largest_tables AS
-SELECT CONCAT(table_schema, '.', table_name) as schema_table,
+SELECT table_name,
+       table_schema,
        table_rows as 'rows',
        ROUND(data_length / ( 1024 * 1024 * 1024 ), 2) as data_Gb,
        ROUND(index_length / ( 1024 * 1024 * 1024 ), 2) as index_Gb,
@@ -225,6 +226,7 @@ SELECT CONCAT(table_schema, '.', table_name) as schema_table,
        ROUND(data_free / ( 1024 * 1024 * 1024 ), 2) as data_frag,
        ROUND(index_length / data_length, 2) as index_frac
 FROM   information_schema.TABLES
+WHERE TABLE_SCHEMA NOT IN ('performance_schema','information_schema','mysql','sys')
 ORDER  BY data_length + index_length DESC limit 15;
 
 
@@ -375,26 +377,8 @@ create or replace view recommend_compression as
 select t.table_name as 'Recommended Tables for Innodb Compresssion'
 from top_five_size t
 INNER JOIN information_schema.COLUMNS c ON t.table_name = c.table_name
-where c.DATA_TYPE like '%text%'
-group by t.table_name;
-
-
-create or replace view top_five_write as
-SELECT pst.object_name AS table_name
-  FROM performance_schema.table_io_waits_summary_by_table AS pst
-  LEFT JOIN
-      (SELECT LEFT(SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(file_name, '\\', '/'), '/', -2), '/', 1), 64) AS table_schema,
-       LEFT(SUBSTRING_INDEX(REPLACE(SUBSTRING_INDEX(REPLACE(file_name, '\\', '/'), '/', -1), '@0024', '$'), '.', 1), 64) AS table_name
-       FROM performance_schema.file_summary_by_instance
-       GROUP BY table_schema, table_name) AS fsbi
-    ON pst.object_schema = fsbi.table_schema
-   AND pst.object_name = fsbi.table_name
-   WHERE table_schema NOT IN ('performance_schema','mysql','information_schema', 'sys')
- ORDER BY (pst.sum_timer_wait - pst.sum_timer_fetch) DESC limit 5;
-
-create or replace view recommend_drop_indexes as
-select concat(object_name,'.', index_name) as 'Recommended Indexes to Drop' 
-from schema_unused_indexes where object_name IN (select table_name from top_five_write);
+where c.DATA_TYPE like '%text%' or c.DATA_TYPE = 'text'
+group by t.table_name limit 2;
 
 
 create or replace view top_five_read as
@@ -411,7 +395,7 @@ SELECT pst.object_name AS table_name
  ORDER BY pst.sum_timer_fetch DESC limit 5;
 
 create or replace view recommend_fix_unoptimised_queries as
-SELECT DIGEST_TEXT AS 'Recommended Unoptimised Queries to Fix',
+SELECT DIGEST_TEXT AS 'query',
        COUNT_STAR AS exec_count,
        round(SUM_TIMER_WAIT / 1000000000000, 0) AS total_latency_sec,
        SUM_NO_INDEX_USED AS no_index_used_count,
@@ -661,6 +645,25 @@ SELECT object_schema,
    AND index_name != 'PRIMARY'
  ORDER BY object_schema, object_name;
 
+create or replace view top_five_write as
+SELECT pst.object_name AS table_name
+  FROM performance_schema.table_io_waits_summary_by_table AS pst
+  LEFT JOIN
+      (SELECT LEFT(SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(file_name, '\\', '/'), '/', -2), '/', 1), 64) AS table_schema,
+       LEFT(SUBSTRING_INDEX(REPLACE(SUBSTRING_INDEX(REPLACE(file_name, '\\', '/'), '/', -1), '@0024', '$'), '.', 1), 64) AS table_name
+       FROM performance_schema.file_summary_by_instance
+       GROUP BY table_schema, table_name) AS fsbi
+    ON pst.object_schema = fsbi.table_schema
+   AND pst.object_name = fsbi.table_name
+   WHERE table_schema NOT IN ('performance_schema','mysql','information_schema', 'sys')
+ ORDER BY (pst.sum_timer_wait - pst.sum_timer_fetch) DESC limit 5;
+
+create or replace view recommend_drop_indexes as
+select concat(object_name,'.', index_name) as 'Recommended Indexes to Drop'
+from schema_unused_indexes where object_name IN (select table_name from top_five_write);
+
+
+
 DROP PROCEDURE IF EXISTS show_recommendations;
 DELIMITER $$
 
@@ -704,6 +707,7 @@ SELECT DIGEST_TEXT AS query,
        LAST_SEEN as last_seen
   FROM performance_schema.events_statements_summary_by_digest
   WHERE LAST_SEEN >= NOW() - INTERVAL 7 DAY
+  AND DIGEST_TEXT NOT IN ('NULL','null','COMMIT','commit')
 ORDER BY SUM_TIMER_WAIT DESC;
 
 
@@ -737,7 +741,7 @@ SELECT DIGEST_TEXT AS query,
 CREATE OR REPLACE
   ALGORITHM = MERGE
   SQL SECURITY INVOKER 
-VIEW statements_with_full_table_scans AS
+VIEW statements_with_high_filter AS
 SELECT DIGEST_TEXT AS query,
        SCHEMA_NAME as db,
        COUNT_STAR AS exec_count,

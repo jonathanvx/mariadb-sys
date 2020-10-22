@@ -13,7 +13,7 @@ SELECT pst.object_name AS table_name
  ORDER BY pst.sum_timer_fetch DESC limit 5;
 
 create or replace view recommend_fix_unoptimised_queries as
-SELECT DIGEST_TEXT AS 'Recommended Unoptimised Queries to Fix',
+SELECT DIGEST_TEXT AS 'query',
        COUNT_STAR AS exec_count,
        round(SUM_TIMER_WAIT / 1000000000000, 0) AS total_latency_sec,
        SUM_NO_INDEX_USED AS no_index_used_count,

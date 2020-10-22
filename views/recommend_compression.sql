@@ -9,6 +9,6 @@ create or replace view recommend_compression as
 select t.table_name as 'Recommended Tables for Innodb Compresssion'
 from top_five_size t
 INNER JOIN information_schema.COLUMNS c ON t.table_name = c.table_name
-where c.DATA_TYPE like '%text%'
-group by t.table_name;
+where c.DATA_TYPE like '%text%' or c.DATA_TYPE = 'text'
+group by t.table_name limit 2;
 

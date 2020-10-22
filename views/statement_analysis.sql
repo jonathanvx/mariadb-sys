@@ -77,4 +77,5 @@ SELECT DIGEST_TEXT AS query,
        LAST_SEEN as last_seen
   FROM performance_schema.events_statements_summary_by_digest
   WHERE LAST_SEEN >= NOW() - INTERVAL 7 DAY
+  AND DIGEST_TEXT NOT IN ('NULL','null','COMMIT','commit')
 ORDER BY SUM_TIMER_WAIT DESC;

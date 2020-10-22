@@ -45,7 +45,7 @@ CREATE OR REPLACE
   ALGORITHM = MERGE
 --  DEFINER = 'root'@'localhost'
   SQL SECURITY INVOKER 
-VIEW statements_with_full_table_scans AS
+VIEW statements_with_high_filter AS
 SELECT DIGEST_TEXT AS query,
        SCHEMA_NAME as db,
        COUNT_STAR AS exec_count,
